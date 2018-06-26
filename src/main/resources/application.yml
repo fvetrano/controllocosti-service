@@ -1,0 +1,47 @@
+logging:
+  level:
+    root: "${ROOT_LOG_LEVEL:INFO}"
+    it.eng.tim.costi: "${SERVICE_LOG_LEVEL:DEBUG}"
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) [${spring.application.name}] [trace=%16X{X-B3-TraceId:-},span=%16X{X-B3-SpanId:-}] %-30logger{0}: %m%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] [%-5level] [%logger{36}] - %msg%n"
+
+  ##file: "./test_costi.log"
+
+
+costi:
+  integration:
+    sdp-gs-base-path: "${SDP_GS_PATH:http://localhost:8080}"
+    sdp-npat-base-path: "${SDP_NPAT_PATH:http://localhost:8080}"
+
+application:
+  config:
+    keystorePath: "/private/keystore.jks"
+
+
+  
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: "${HTTP_CONN_TIMEOUT:5000}"
+        readTimeout: "${HTTP_DEF_TIMEOUT:10000}"
+        loggerLevel: basic
+
+      sdp-gatesender:
+        connectTimeout: "${SDP_GS_CONN_TIMEOUT:5000}"
+        readTimeout: "${SDP_GS_TIMEOUT:10000}"
+        
+      sdp-npat:
+        connectTimeout: "${SDP_NPAT_CONN_TIMEOUT:5000}"
+        readTimeout: "${SDP_NPAT_TIMEOUT:10000}"
+
+hystrix:
+  command:
+    default:
+      execution.isolation.thread.timeoutInMilliseconds: "${HYSTRIX_TIMEOUT:20000}"
+      circuitBreaker:
+        enabled: true
+        sleepWindowInMilliseconds: "${HYSTRIX_TIMEOUT:20000}"
+      fallback.enabled: true
+
